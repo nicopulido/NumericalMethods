@@ -74,12 +74,18 @@ def realFunction(function, x_0, x_1, x_2, givenError):
 
 x = symbols('x')
 
+
+print("Ingrese una función")
 function = lambdify(x, input())
 
+print("Ingrese el error esperado")
 givenError = float(input())
 
+print("Ingrese x0")
 x_0 = float(input())
+print("Ingrese x1")
 x_1 = float(input())
+print("Ingrese x2")
 x_2 = float(input())
 
 #given the supossition that x_0 is the min valor and x_2 the max valor
