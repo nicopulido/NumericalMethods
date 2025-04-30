@@ -5,8 +5,10 @@ import math
 
 def sinteticDivision(polynomial, x, Xn):
     derivatedPoly = polynomial.diff(x)
-    Xn = Xn - polynomial.subs(x, Xn)/derivatedPoly.subs(x, Xn)
-    while(derivatedPoly(Xn) != 0):
+    while(polynomial.subs(x,Xn) != 0):
+        print(derivatedPoly.subs(x, Xn))
+        print(polynomial.subs(x, Xn))
+        print(Xn)
         Xn = Xn - polynomial.subs(x, Xn)/derivatedPoly.subs(x, Xn)
     return Xn
 
@@ -21,10 +23,12 @@ x = symbols('x')
 polynomial = Poly(input("Ingrese el polinomio: "), x)
 
 while(not polynomial.is_irreducible):
-    Xn = sinteticDivision(polynomial, x, 0)
+    Xn = sinteticDivision(polynomial, x, 1)
+
+    print("(" + "x" +  str(-Xn) + ")")
 
     polyCoefficients = polynomial.all_coeffs()
-    reducedPolynomial = reducePolynomial(polyCoefficients, x, Xn)
+    reducedPolynomial = reducePolynomial(polyCoefficients, Xn)
 
     polynomial = Poly(reducedPolynomial, x)
 
