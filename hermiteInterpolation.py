@@ -64,84 +64,46 @@ def find_hermite_polynomial(X_kpoints, fpoints, dfpoints, n, x):
     return sum(partialHermitePolys) + sum(partialHermiteHatPolys)
 
 
-def drawCubicSplines(hermitePoly, symbol, points, yvalues):
+def drawFunction(hermitePoly, symbol, points, yvalues):
     hermiteFunc = sympy.lambdify(symbol, hermitePoly.as_expr(), "numpy")
     X = np.linspace(points[0],points[-1])
     Y = hermiteFunc(X)
     plt.scatter(points, yvalues, color = "orange")
-    plt.plot(X, Y, label="Hermite Polynomial")
+    if len(points) == 2:
+        plt.plot(X, Y, label="Hermite Polynomial from: " + str(points))  
+        plt.xlabel("x")
+        plt.ylabel("y")
+    else:
+        plt.plot(X, Y, label="Hermite Polynomial from: " + str(hermitePoly.as_expr()))
+        plt.xlabel("x")
+        plt.ylabel("y")
 
     
+# Example usage:
+points = []
+yvalues = []
+dfvalues = []
+x = symbols('x')
 
+numberOfPoints = int(input("Enter the number of points: "))
+for i in range(numberOfPoints):
+    point = float(input(f"Enter the X_k value for point {i+1}: "))
+    fValue = float(input(f"Enter the f({point}) value for point {i+1}: "))
+    dfValue = float(input(f"Enter the f'({point}) value for point {i+1}: "))
+    points.append(point)
+    yvalues.append(fValue)
+    dfvalues.append(dfValue)
 
-X_kpoints = []
-fpoints = []
-dfpoints = []
-x, y= symbols('x y')
+for i in range(numberOfPoints - 1):
+    hermitePol = find_hermite_polynomial(points[i: i + 2], yvalues[i: i + 2], dfvalues[i: i + 2], 2, x)
+    drawFunction(hermitePol, x, points[i:i + 2], yvalues[i:i + 2])
+    
+hermitePoly = find_hermite_polynomial(points, yvalues, dfvalues, numberOfPoints, x)
+drawFunction(hermitePoly, x, points, yvalues)
 
-
-X_kpoints.append(-2)
-X_kpoints.append(1)
-
-fpoints.append(-12)
-fpoints.append(9)
-
-dfpoints.append(22)
-dfpoints.append(10)
-
-
-print(find_hermite_polynomial(X_kpoints, fpoints, dfpoints, len(X_kpoints), x))
-print(type(find_hermite_polynomial(X_kpoints, fpoints, dfpoints, len(X_kpoints), x)))
-
-# To write a Poly type as a function and plot it on an x, y graph:
-hermite_poly = find_hermite_polynomial(X_kpoints, fpoints, dfpoints, len(X_kpoints), x)
-
-
-drawCubicSplines(hermite_poly,x,X_kpoints,fpoints)
-
-plt.show()
-
-
-"""points = []
-
-for i in range(1):
-    x = symbols('x')
-    X_k = float(input("Enter the X_k value: "))
-    f = float(input("Enter the f(" + str(X_k) + ") value: "))
-    df = float(input("Enter the f'(" + str( X_k )+ ") value: "))
-    points.append((X_k, f, df))
-
-X_kpoints = []
-fpoints = []
-dfpoints = []
-x, y= symbols('x y')
-
-
-X_kpoints.append(-2)
-X_kpoints.append(1)
-
-fpoints.append(-12)
-fpoints.append(9)
-
-dfpoints.append(22)
-dfpoints.append(10)
-
-
-print(find_hermite_polynomial(X_kpoints, fpoints, dfpoints, len(X_kpoints), x))
-print(type(find_hermite_polynomial(X_kpoints, fpoints, dfpoints, len(X_kpoints), x)))
-
-# To write a Poly type as a function and plot it on an x, y graph:
-hermite_poly = find_hermite_polynomial(X_kpoints, fpoints, dfpoints, len(X_kpoints), x)
-hermite_func = sympy.lambdify(x, hermite_poly.as_expr(), "numpy")
-X = np.linspace(-2, 1, 400)
-Y = hermite_func(X)
-
-plt.scatter(X_kpoints,fpoints,label = "Interpolation Points", color = "orange")
-plt.plot(X, Y, label="Hermite Polynomial")
-plt.xlabel("x")
-plt.ylabel("y")
 plt.title("Hermite Interpolating Polynomial")
 plt.legend()
 plt.grid(True)
+
 plt.show()
-"""
+
